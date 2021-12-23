@@ -1,0 +1,150 @@
+---
+title: "RStudio ETL, EDA, and Control Tests Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+************************************************************************
+Title: "RStudio ETL, EDA, and Control Tests Notebook"
+Author: Jessen Hobson
+************************************************************************
+
+# Load packages
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+# ETL - Extract, Transform, and Load the data
+## Load data
+```{r}
+dfa <- read_csv("pcard_data_part1_v01.csv")
+
+dfb <- read_csv("pcard_data_part1_v01.csv")
+```
+
+## Join the data together before fixing the column headings
+```{r}
+dftemp <- bind_rows(dfa, dfb)
+```
+
+## Rename the `MCC.Description` column in dfa and join correctly
+```{r}
+# Rename
+dfa <- dfa %>% rename(MCC = MCC.Description)
+
+# join
+df <- bind_rows(dfa, dfb)
+```
+
+## Filter to keep only OSU
+```{r}
+df <- df %>% filter(Agency.Number == 1000)
+```
+
+## Modify all character columns to make the strings all uppercase
+```{r}
+df <- df %>% mutate(across(where(is.character), str_to_upper))
+```
+
+## 1) Eliminate "Project"; 2) Convert columns that should be numbers; 3) Convert columns that should be dates
+```{r}
+# Eliminate `Project`
+##df <- df %>% select(-Project)
+
+# numeric and date columns are already correct
+str(df)
+```
+
+## Add three date columns
+```{r}
+df <- df %>% mutate(Month = month(Transaction.Date))
+df <- df %>% mutate(Weekday = wday(Transaction.Date))
+df <- df %>% mutate(Day.Month = mday(Transaction.Date))
+```
+
+# Exploratory Data Analysis
+## Distribution statistics for `Amount`
+```{r}
+summary(df$Amount)
+```
+
+## Box plot for `Amount`
+```{r}
+df %>% ggplot(aes(y=Amount)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(-1000, 1000))
+```
+
+## Sum of `Amount` by month
+```{r}
+des2 <- df %>% group_by(Month) %>%  
+  summarize(sum_amount = sum(Amount))
+
+des2 %>% ggplot(aes(y=sum_amount, x=as.factor(Month), fill=as.factor(Month))) + 
+  geom_col()
+```
+
+## Sum of `Amount` by day of the week
+```{r}
+df %>% 
+  group_by(Weekday) %>%  
+  summarize(sum_amount = sum(Amount)) %>% 
+  ggplot(aes(y=sum_amount, x=as.factor(Weekday), fill=as.factor(Weekday))) + 
+  geom_col()
+```
+
+## Sum of `Amount` by day of the month
+```{r}
+df %>% group_by(Day.Month) %>%  summarize(sum_amount = sum(Amount)) %>% 
+  ggplot(aes(y=sum_amount, x=as.factor(Day.Month), fill=as.factor(Day.Month))) + 
+  geom_col()
+```
+
+# Tests of controls
+## Single Transaction Limit, descending by `Amount`
+```{r}
+## All transactions
+df %>% filter(Amount>5000) %>% 
+  arrange(desc(Amount))
+```
+
+## Single transaction limit, ascending by `Cardholder.Name`
+```{r}
+## All transactions
+df %>% filter(Amount>5000) %>% 
+  arrange(Cardholder.Name)
+```
+
+## Single transaction limit, ascending by `Item.Description`
+```{r}
+## All transactions
+df %>% filter(Amount>5000) %>% 
+  arrange(Item.Description)
+```
+
+## Single transaction limit, by person
+```{r}
+df %>% filter(Amount>5000) %>% 
+  group_by(Cardholder.Name) %>% 
+  summarize(count = n(), sum_amount=sum(Amount), avg_amount=mean(Amount)) %>% 
+  arrange(desc(count))
+```
+
+## Yearly spending limit
+```{r}
+df %>% group_by(Cardholder.Name) %>% 
+  summarize(sum_amount = sum(Amount), count = n()) %>% 
+  filter(sum_amount >50000) %>% 
+  arrange(desc(sum_amount))
+```
+
+## Monthly spending limit violations by person
+```{r}
+df %>% group_by(Cardholder.Name, Month) %>% 
+  summarize(sum_amount = sum(Amount)) %>% 
+  filter(sum_amount >10000) %>% 
+  summarize(count_months_over = n(), total_spent = sum(sum_amount), average_per_month=mean(sum_amount)) %>% 
+  arrange(desc(count_months_over))
+```
