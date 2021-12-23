@@ -1,6 +1,6 @@
-# Examine-the-audit-of-controls-over-credit-card-transactions-in-Rstudio
+##Examine-the-audit-of-controls-over-credit-card-transactions-in-Rstudio
 
-# Problem: 
+##Problem: 
 •	This case is based upon a case from the Ernst and Young Academic Research Center, also known as EYARC. The case is called Payment(P)-card. The use of the case material complies with the copyright therein. Specifically, the EYARC copyright prohibits posting case solutions on any publicly accessible platform. Thus, before using these materials, data is modified that meets all requirements and their respective materials. The case uses real data from Oklahoma State University. Data set that we'll use for this case is from the State of Oklahoma Payment Card Purchases. 
 •	Payment cards or P-cards are business credit cards that some employees are permitted to use to purchase necessary goods and services for work. Employees can use the P-card to make appropriate business purchases and then later seeking for reimbursement. 
 •	The Oklahoma state government does not want its employees to use P- cards for just anything. The organization then authorizes the use of P-cards has rules or controls about what a user of a P-card is allowed to spend money on, and how much they're allowed to spend. 
