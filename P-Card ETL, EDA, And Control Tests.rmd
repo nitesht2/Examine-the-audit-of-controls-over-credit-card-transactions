@@ -7,7 +7,6 @@ output:
 
 ************************************************************************
 Title: "RStudio ETL, EDA, and Control Tests Notebook"
-Author: Jessen Hobson
 ************************************************************************
 
 # Load packages
