@@ -15,7 +15,7 @@ Finally, let's think about how employees might circumvent, subvert, or get aroun
 Now we'll load, view, transform, and clean the data to make sure it's ready for use. This process is often called ETL for extracting, transforming, and loading data, data merging, data prep, among many other names. 
 Once the data is loaded and cleaned, we'll explore it a bit. This process is often called EDA or exploratory data analysis. In this case, we'll have three specific controls that we're testing. 
 1.	Individual transaction < $5000
-2.	Total purchases for the month <10000
-3.	Total purchases for the year < 50000
+2.	Total purchases for the month <$10000
+3.	Total purchases for the year < $50000
 Finally, we'll check all the data to examine whether any of the three controls have been violated. We'll then make a list of violations and follow up with management to see if they have explanations for these violations. 
 
