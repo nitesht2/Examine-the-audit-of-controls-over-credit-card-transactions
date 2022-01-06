@@ -18,4 +18,4 @@ Once the data is loaded and cleaned, we'll explore it a bit. This process is oft
 2.	Total purchases for the month <10000
 3.	Total purchases for the year < 50000
 Finally, we'll check all the data to examine whether any of the three controls have been violated. We'll then make a list of violations and follow up with management to see if they have explanations for these violations. 
-![image](https://user-images.githubusercontent.com/50633864/147261275-755842de-b2b6-476b-ab3c-8f2f29d07698.png)
+
